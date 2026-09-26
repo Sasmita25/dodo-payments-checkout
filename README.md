@@ -6,7 +6,8 @@ The main thing I focused on was keeping the merchant integration simple while ke
 
 ## Demo
 
-Live demo: `https://your-demo-url.com`
+Live demo merchant: `https://dodo-payments-merchant.netlify.app/`
+Live demo checkout: `https://dodo-payments-checkout.netlify.app/`
 
 > Replace the URL above with the deployed merchant demo URL.
 
@@ -271,8 +272,6 @@ The merchant and checkout communicate using `window.postMessage`.
 
 I wanted to keep the communication boundary small. The messages contain only the information required to coordinate the checkout:
 
-- session ID
-- product ID
 - payment result
 - error information
 - close reason
@@ -299,7 +298,6 @@ The SDK also ignores duplicate `checkout.ready` messages and prevents duplicate 
 
 I intentionally avoid using `"*"` as the `postMessage` target origin.
 
-The current project uses fixed localhost origins because this is the assignment environment. In production, these would be configuration values based on the deployed environments.
 
 ## Test cards
 
@@ -381,13 +379,44 @@ With more time, I would explore:
 
 This is intentionally a frontend-only take-home with simulated payment processing.
 
-Product data, payment behavior, and origins are simplified for the assignment. The current local implementation uses fixed localhost URLs, and the payment result is determined entirely by the test card number.
-
 A production version would move real payment authorization, pricing, idempotency, and environment-specific configuration into the appropriate systems.
 
 ## Running locally
 
-There are two applications to run.
+There are two applications to run locally: the checkout app and the merchant demo.
+
+Start each application in a separate terminal:
+
+### 1. Checkout app
+
+```bash
+cd checkout-app
+npm install
+npm run dev
+```
+
+The checkout app runs on:
+
+```text
+http://localhost:5173
+```
+
+### 2. Merchant demo
+
+```bash
+cd merchant-demo
+npm install
+npm run dev
+```
+
+The merchant demo runs on:
+
+```text
+http://localhost:5174
+```
+
+For local development, update the URLs in the SDK and checkout app to use these localhost addresses instead of the deployed Netlify URLs.
+
 
 ### Checkout app
 
@@ -400,7 +429,7 @@ npm run dev
 The checkout runs at:
 
 ```text
-http://localhost:5173
+https://dodo-payments-checkout.netlify.app/
 ```
 
 ### Merchant demo
@@ -416,7 +445,7 @@ npm run dev
 The merchant demo runs at:
 
 ```text
-http://localhost:5175
+https://app.netlify.com/projects/dodo-payments-merchant/overview
 ```
 
 Open the merchant page and click **Buy now**.
