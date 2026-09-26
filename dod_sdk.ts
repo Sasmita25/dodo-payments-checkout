@@ -114,58 +114,45 @@ function handleCheckoutLoadTimeout() {
   });
 }
 
-function handleCheckoutMessage(
-  event: MessageEvent
-) {
+function handleCheckoutMessage(event: MessageEvent) {
+  console.log("SDK received message:", event);
+  console.log("SDK expected origin:", CHECKOUT_ORIGIN);
+  console.log("Actual message origin:", event.origin);
   console.log(
-    "SDK received message:",
-    event
+    "Source matches iframe:",
+    event.source === checkoutIframe?.contentWindow
   );
 
-  if (
-    event.origin !== CHECKOUT_ORIGIN
-  ) {
+  if (event.origin !== CHECKOUT_ORIGIN) {
+    console.log("Rejected: origin mismatch");
     return;
   }
 
-  if (
-    event.source !==
-    checkoutIframe?.contentWindow
-  ) {
+  if (event.source !== checkoutIframe?.contentWindow) {
+    console.log("Rejected: source mismatch");
     return;
   }
 
-  if (
-    !checkoutIframe ||
-    !checkoutSessionId
-  ) {
+  if (!checkoutIframe || !checkoutSessionId) {
+    console.log("Rejected: no iframe or session");
     return;
   }
 
+  if (event.data?.type === "checkout.ready") {
+    console.log("checkout.ready accepted");
 
-  if (
-    event.data?.type ===
-    "checkout.ready"
-  ) {
     if (checkoutReady) {
       return;
     }
 
     checkoutReady = true;
-
     clearCheckoutLoadTimeout();
-
-    console.log(
-      "Checkout is ready! Sending checkout.init"
-    );
 
     checkoutIframe.contentWindow?.postMessage(
       {
         type: "checkout.init",
-        sessionId:
-          checkoutSessionId,
-        productId:
-          checkoutProductId,
+        sessionId: checkoutSessionId,
+        productId: checkoutProductId,
       },
       CHECKOUT_ORIGIN
     );
@@ -173,45 +160,28 @@ function handleCheckoutMessage(
     return;
   }
 
-
   if (
-    (event.data?.type ===
-      "checkout.success" ||
-      event.data?.type ===
-        "checkout.error") &&
-    event.data.sessionId !==
-      checkoutSessionId
+    (event.data?.type === "checkout.success" ||
+      event.data?.type === "checkout.error") &&
+    event.data.sessionId !== checkoutSessionId
   ) {
     return;
   }
 
-
-  if (
-    event.data?.type ===
-    "checkout.success"
-  ) {
-    if (successNotified) {
-      return;
-    }
+  if (event.data?.type === "checkout.success") {
+    if (successNotified) return;
 
     successNotified = true;
 
     onSuccessCallback?.({
-      sessionId:
-        checkoutSessionId,
+      sessionId: checkoutSessionId,
     });
 
     return;
   }
 
-  
-  if (
-    event.data?.type ===
-    "checkout.error"
-  ) {
-    if (successNotified) {
-      return;
-    }
+  if (event.data?.type === "checkout.error") {
+    if (successNotified) return;
 
     onErrorCallback?.({
       code: event.data.code,
@@ -221,19 +191,18 @@ function handleCheckoutMessage(
     return;
   }
 
-
-  if (
-    event.data?.type ===
-    "checkout.close"
-  ) {
-    if (
-      event.data.sessionId !==
-      checkoutSessionId
-    ) {
+  if (event.data?.type === "checkout.close") {
+    if (event.data.sessionId !== checkoutSessionId) {
       return;
     }
 
+    const closeCallback = onCloseCallback;
+
     cleanupCheckout();
+
+    closeCallback?.({
+      reason: event.data.reason || "customer_closed",
+    });
 
     return;
   }
