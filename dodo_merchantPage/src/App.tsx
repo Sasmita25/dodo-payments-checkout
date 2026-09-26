@@ -21,10 +21,7 @@ function App() {
       productId: "prod_starter_20",
 
       onSuccess: ({ sessionId }) => {
-        console.log(
-          "Merchant received success:",
-          sessionId
-        );
+       
 
         setCallbackStatus({
           type: "success",
@@ -33,11 +30,7 @@ function App() {
       },
 
       onError: ({ code, message }) => {
-        console.log(
-          "Merchant received error:",
-          code,
-          message
-        );
+      
 
         setCallbackStatus({
           type: "error",
@@ -46,10 +39,7 @@ function App() {
       },
 
       onClose: ({ reason }) => {
-        console.log(
-          "Merchant received close:",
-          reason
-        );
+       
 
       },
     });

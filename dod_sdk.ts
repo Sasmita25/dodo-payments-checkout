@@ -98,9 +98,7 @@ function handleCheckoutLoadTimeout() {
     return;
   }
 
-  console.log(
-    "Checkout failed to initialize."
-  );
+
 
   const errorCallback =
     onErrorCallback;
@@ -115,31 +113,24 @@ function handleCheckoutLoadTimeout() {
 }
 
 function handleCheckoutMessage(event: MessageEvent) {
-  console.log("SDK received message:", event);
-  console.log("SDK expected origin:", CHECKOUT_ORIGIN);
-  console.log("Actual message origin:", event.origin);
-  console.log(
-    "Source matches iframe:",
-    event.source === checkoutIframe?.contentWindow
-  );
-
+ 
   if (event.origin !== CHECKOUT_ORIGIN) {
-    console.log("Rejected: origin mismatch");
+   
     return;
   }
 
   if (event.source !== checkoutIframe?.contentWindow) {
-    console.log("Rejected: source mismatch");
+
     return;
   }
 
   if (!checkoutIframe || !checkoutSessionId) {
-    console.log("Rejected: no iframe or session");
+
     return;
   }
 
   if (event.data?.type === "checkout.ready") {
-    console.log("checkout.ready accepted");
+  
 
     if (checkoutReady) {
       return;
@@ -210,10 +201,7 @@ function handleCheckoutMessage(event: MessageEvent) {
 
 export const DodoCheckout = {
   open(options: CheckoutOptions) {
-    console.log(
-      "Opening checkout for:",
-      options.productId
-    );
+  
 
   
     if (checkoutIframe) {
@@ -329,10 +317,7 @@ export const DodoCheckout = {
       modal
     );
 
-    console.log(
-      "Checkout session:",
-      checkoutSessionId
-    );
+   
   },
 
 
@@ -341,9 +326,7 @@ export const DodoCheckout = {
       return;
     }
 
-    console.log(
-      "Closing checkout."
-    );
+   
 
     const closeCallback =
       onCloseCallback;

@@ -46,7 +46,7 @@ cvvMessage: "",
 
 useEffect(() => {
 function handleMessage(event: MessageEvent) {
-console.log("Checkout received message:", event);
+
 
   // Only accept messages from the merchant
   if (event.origin !== PARENT_ORIGIN) {
@@ -66,10 +66,7 @@ console.log("Checkout received message:", event);
     return;
   }
 
-  console.log(
-    "Checkout initialized:",
-    event.data
-  );
+ 
 
   setSessionId(event.data.sessionId);
 }
