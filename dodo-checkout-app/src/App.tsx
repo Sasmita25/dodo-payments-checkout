@@ -3,7 +3,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import formValidation from "./utils/validation";
 import { processPayment } from "./utils/processPayment";
 
-const PARENT_ORIGIN = "https://dodo-payments-merchant.netlify.app/";
+const PARENT_ORIGIN = "https://dodo-payments-merchant-demo.netlify.app";
 
 type PaymentState =
   | "idle"
@@ -143,23 +143,22 @@ function App() {
     return null;
   }
 
-  function handleClose() {
-    if (!sessionId) {
-      return;
-    }
-
-    console.log("Customer closing checkout.");
-
-    window.parent.postMessage(
-      {
-        type: "checkout.close",
-        sessionId,
-        reason: "customer_closed",
-      },
-      PARENT_ORIGIN
-    );
+ function handleClose() {
+  if (!sessionId) {
+    return;
   }
 
+  console.log("Customer closing checkout.");
+
+  window.parent.postMessage(
+    {
+      type: "checkout.close",
+      sessionId,
+      reason: "customer_closed",
+    },
+    PARENT_ORIGIN
+  );
+}
 
   function handleSuccessDone() {
     if (!sessionId) {
@@ -326,7 +325,7 @@ function App() {
         return;
       }
 
-   //temp failure
+   //temp
       if (result === "temporary_failure") {
         setPaymentState(
           "temporary_failure"
