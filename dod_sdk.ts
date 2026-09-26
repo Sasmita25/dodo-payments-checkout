@@ -18,7 +18,7 @@ type CheckoutOptions = {
 let checkoutIframe: HTMLIFrameElement | null = null;
 let checkoutModal: HTMLDivElement | null = null;
 
-const CHECKOUT_URL = "http://localhost:5173";
+const CHECKOUT_URL = "https://dodo-payments-checkout.netlify.app/";
 const CHECKOUT_ORIGIN = new URL(
   CHECKOUT_URL
 ).origin;
