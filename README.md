@@ -416,7 +416,7 @@ npm run dev
 The merchant demo runs at:
 
 ```text
-http://localhost:5175
+https://app.netlify.com/projects/dodo-payments-merchant/overview
 ```
 
 Open the merchant page and click **Buy now**.
