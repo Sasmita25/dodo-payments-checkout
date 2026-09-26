@@ -3,7 +3,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import formValidation from "./utils/validation";
 import { processPayment } from "./utils/processPayment";
 
-const PARENT_ORIGIN = "http://localhost:5175";
+const PARENT_ORIGIN = "https://dodo-payments-merchant.netlify.app/";
 
 type PaymentState =
   | "idle"
