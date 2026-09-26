@@ -20,7 +20,7 @@ function App() {
     DodoCheckout.open({
       productId: "prod_starter_20",
 
-      onSuccess: ({ sessionId }) => {
+      onSuccess: () => {
        
 
         setCallbackStatus({
@@ -38,7 +38,7 @@ function App() {
         });
       },
 
-      onClose: ({ reason }) => {
+      onClose: () => {
        
 
       },
