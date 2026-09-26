@@ -45,55 +45,49 @@ function App() {
   });
 
  
-  useEffect(() => {
-    function handleMessage(event: MessageEvent) {
-      console.log("Checkout received message:", event);
+ useEffect(() => {
+  function handleMessage(event: MessageEvent) {
+    console.log("Checkout received message:", event);
+    console.log("Message origin:", event.origin);
+    console.log("Expected parent origin:", PARENT_ORIGIN);
+    console.log("Is correct parent:", event.source === window.parent);
 
-      // origin restriction
-      if (event.origin !== PARENT_ORIGIN) {
-        return;
-      }
-
-      if (event.source !== window.parent) {
-        return;
-      }
-
-      if (event.data?.type !== "checkout.init") {
-        return;
-      }
-
-      if (typeof event.data.sessionId !== "string") {
-        return;
-      }
-
-      console.log(
-        "Checkout initialized:",
-        event.data
-      );
-
-      setSessionId(event.data.sessionId);
+    if (event.origin !== PARENT_ORIGIN) {
+      return;
     }
 
-    window.addEventListener(
-      "message",
-      handleMessage
-    );
+    if (event.source !== window.parent) {
+      return;
+    }
 
-   
-    window.parent.postMessage(
-      {
-        type: "checkout.ready",
-      },
-      PARENT_ORIGIN
-    );
+    if (event.data?.type !== "checkout.init") {
+      return;
+    }
 
-    return () => {
-      window.removeEventListener(
-        "message",
-        handleMessage
-      );
-    };
-  }, []);
+    if (typeof event.data.sessionId !== "string") {
+      return;
+    }
+
+    console.log("Checkout initialized:", event.data);
+
+    setSessionId(event.data.sessionId);
+  }
+
+  window.addEventListener("message", handleMessage);
+
+  console.log("Checkout sending ready to:", PARENT_ORIGIN);
+
+  window.parent.postMessage(
+    {
+      type: "checkout.ready",
+    },
+    PARENT_ORIGIN
+  );
+
+  return () => {
+    window.removeEventListener("message", handleMessage);
+  };
+}, []);
 
   useEffect(() => {
     function handleEscape(
@@ -143,12 +137,13 @@ function App() {
     return null;
   }
 
- function handleClose() {
+function handleClose() {
   if (!sessionId) {
+    console.warn("Cannot close checkout: session is not initialized.");
     return;
   }
 
-  console.log("Customer closing checkout.");
+  console.log("Customer closing checkout:", sessionId);
 
   window.parent.postMessage(
     {
